@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class Main {
+
     private static Boolean endsSequence(Token tok) {
         if (tok == null) return true;
         if (tok instanceof OpToken) {
@@ -31,7 +32,7 @@ public class Main {
         return tokens;
     }
 
-    private static int evalPrefix(ArrayList<Token> tokens) {
+    public static int evalPrefix(ArrayList<Token> tokens) {
         Stack<Integer> stack = new Stack<>();
 
         for (int i = tokens.size() - 1; i >= 0; i--) {
@@ -69,7 +70,6 @@ public class Main {
                 tokenSequence = getNextSequence(myScanner);
 
                 if (tokenSequence != null) {
-
                     int result = evalPrefix(tokenSequence);
                     System.out.println("Result: " + result);
                 }

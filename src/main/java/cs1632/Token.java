@@ -4,8 +4,10 @@ public class Token {
     private String tokenString;
 
     public Token(String ts) {
-        tokenString = ts; }
+        tokenString = ts;
+    }
 
     public String getTokenString() {
-        return tokenString; }
+        return tokenString;
+    }
 }
