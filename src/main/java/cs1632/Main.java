@@ -2,6 +2,7 @@ package cs1632;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class Main {
     private static Boolean endsSequence(Token tok) {
@@ -12,6 +13,7 @@ public class Main {
         }
         return false;
     }
+
     private static ArrayList<Token> getNextSequence(Tokenizer toknizr) throws IOException {
         ArrayList<Token> tokens = new ArrayList<>();
         Token tok;
@@ -19,6 +21,7 @@ public class Main {
             tok = toknizr.nextToken();
             if (tok != null) tokens.add(tok);
         } while (!endsSequence(tok));
+
         if (tok == null) return null;
         if (tok instanceof OpToken) {
             if (((OpToken) tok).getOperator() == '.') {
@@ -28,23 +31,49 @@ public class Main {
         return tokens;
     }
 
+    private static int evalPrefix(ArrayList<Token> tokens) {
+        Stack<Integer> stack = new Stack<>();
+
+        for (int i = tokens.size() - 1; i >= 0; i--) {
+            Token tok = tokens.get(i);
+
+            if (tok instanceof OpToken && ((OpToken) tok).getOperator() == ';') {
+                continue;
+            }
+
+            if (tok instanceof NumToken) {
+                stack.push(((NumToken) tok).value);
+            }
+            else if (tok instanceof OpToken) {
+                char op = (char)((OpToken) tok).getOperator();
+                int a = stack.pop();
+                int b = stack.pop();
+
+                if (op == '+') stack.push(a + b);
+                else if (op == '-') stack.push(a - b);
+                else if (op == '*') stack.push(a * b);
+                else if (op == '/') stack.push(a / b);
+            }
+        }
+
+        return stack.pop();
+    }
+
     public static void main(String[] args) {
         try {
             Tokenizer myScanner = new Tokenizer(System.in);
             ArrayList<Token> tokenSequence;
-            ArrayList<Token> postfixSequence = null;
+
             do {
                 System.out.print("Equation: ");
                 tokenSequence = getNextSequence(myScanner);
+
                 if (tokenSequence != null) {
-                    // Replace the code starting here with code to evaluate the expression
-                    System.out.print("Read equation: ");
-                    for (Token tok : tokenSequence) {
-                        System.out.print(tok.getTokenString() + " ");
-                    }
-                    System.out.println();
-                    // End where to replace
+
+                    int result = evalPrefix(tokenSequence);
+                    System.out.println("Result: " + result);
                 }
+
             } while (tokenSequence != null);
         }
         catch (IOException e) {
